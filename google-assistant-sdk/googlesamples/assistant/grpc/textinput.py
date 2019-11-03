@@ -155,7 +155,7 @@ class SampleTextAssistant(object):
               help='gRPC deadline in seconds')
 def main(api_endpoint, credentials,
          device_model_id, device_id, lang, display, verbose,
-         grpc_deadline, *args, **kwargs):
+         grpc_deadline, query, *args, **kwargs):
     # Setup logging.
     logging.basicConfig(level=logging.DEBUG if verbose else logging.INFO)
 
@@ -179,15 +179,13 @@ def main(api_endpoint, credentials,
 
     with SampleTextAssistant(lang, device_model_id, device_id, display,
                              grpc_channel, grpc_deadline) as assistant:
-        while True:
-            query = click.prompt('')
-            click.echo('<you> %s' % query)
-            response_text, response_html = assistant.assist(text_query=query)
-            if display and response_html:
-                system_browser = browser_helpers.system_browser
-                system_browser.display(response_html)
-            if response_text:
-                click.echo('<@assistant> %s' % response_text)
+        query = query
+        response_text, response_html = assistant.assist(text_query=query)
+        if display and response_html:
+            system_browser = browser_helpers.system_browser
+            system_browser.display(response_html)
+        if response_text:
+            return respons_text
 
 
 if __name__ == '__main__':
